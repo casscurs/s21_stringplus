@@ -53,7 +53,7 @@ char *s21_unsigned_to_str(unsigned long int num, unsigned int notation,
 char *s21_mantissa_to_str(long double num, int *next_digit, opt options) {
   char *ascii_str = s21_NULL;
   int length = 0, digit = 0, precision = -1;
-  precision = (options.precision >= 0 )? options.precision : 6;
+  precision = (options.precision >= 0) ? options.precision : 6;
 
   num *= (num < 0) ? -1 : 1;
   digit = floorl(num);
@@ -340,7 +340,8 @@ char *s21_float_to_str(long double num) {
   return ascii_str;
 }
 
-void s21_math_rounding(char **num_string, int next_digit, char *exp_sign, unsigned *u_exp) {
+void s21_math_rounding(char **num_string, int next_digit, char *exp_sign,
+                       unsigned *u_exp) {
   if (*num_string && next_digit >= 5) {
     int not_rounded = 1, position = 0;
     position = s21_strlen(*num_string) - 1;
@@ -363,7 +364,8 @@ void s21_math_rounding(char **num_string, int next_digit, char *exp_sign, unsign
       tmp_array = (char *)calloc(num_string_len + 1, sizeof(char));
       if (tmp_array) {
         s21_strcpy(tmp_array, *num_string);
-        tmp_ptr = (char *)realloc(*num_string, sizeof(char)*(num_string_len + 5));
+        tmp_ptr =
+            (char *)realloc(*num_string, sizeof(char) * (num_string_len + 5));
         if (tmp_ptr) {
           tmp_ptr[0] = '1';
           tmp_ptr[1] = '\0';
@@ -394,9 +396,8 @@ void s21_delete_trailing_zeros(char **num_string, opt options) {
       (options.format_spec == GUP || options.format_spec == GLOW)) {
     int position = 0;
     position = s21_strlen(*num_string) - 1;
-    while ((position > 0) && 
-           ((*num_string)[position] == '0' ||
-            ((*num_string)[position] == '.'))) {
+    while ((position > 0) && ((*num_string)[position] == '0' ||
+                              ((*num_string)[position] == '.'))) {
       (*num_string)[position] = '\0';
       position -= 1;
     }

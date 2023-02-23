@@ -33,7 +33,8 @@ void s21_add_notation(char **buf, opt options);
 void s21_add_sign(char **buf, char sign);
 void s21_apply_width(char **buf, opt options, var *variables);
 void s21_delete_trailing_zeros(char **num_string, opt options);
-void s21_math_rounding(char **num_string, int next_digit, char *exp_sign, unsigned *u_exp);
+void s21_math_rounding(char **num_string, int next_digit, char *exp_sign,
+                       unsigned *u_exp);
 
 // others
 size_t s21_wstrlen(wchar_t *wstr);
