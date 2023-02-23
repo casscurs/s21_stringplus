@@ -156,19 +156,23 @@ void *s21_trim(const char *src, const char *trim_chars) {
 */
 
 int s21_strcmp(const char *str1, const char *str2) {
+  int res = 0;
   for (; *str1 && *str1 == *str2; str1++, str2++) {
   }
-  if (!*str1 && !*str2) return 0;
-  return *str1 - *str2;
+  if (!*str1 && !*str2) res = 0;
+  else res = *str1 - *str2;
+  return res;
 }
 
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
   int i = 0;
+  int res = 0;
   for (; *str1 && *str1 == *str2 && i < (int)n - 1; str1++, str2++) {
     i++;
   }
-  if ((!*str1 && !*str2) || (n == 0)) return 0;
-  return *str1 - *str2;
+  if ((!*str1 && !*str2) || (n == 0)) res =  0;
+  else res = *str1 - *str2;
+  return res;
 }
 
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
@@ -185,7 +189,6 @@ int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
   Search functions
   Takakoka
 */
-
 // Searches for the first occurrence of the character 'c'
 char *s21_strchr(const char *str, int c) {
   while (*str != c && *str != '\0') str++;
@@ -198,44 +201,37 @@ char *s21_strchr(const char *str, int c) {
 // Finds the first character in the string str1 that
 // matches any character specified in str2
 char *s21_strpbrk(const char *str1, const char *str2) {
-  while (*str1 != '\0') {
-    if (s21_strchr(str2, *str1) != s21_NULL) {
-      return (char *)str1;
-      break;
-    }
-    str1++;
-  }
-  return s21_NULL;
+    while (!s21_strchr(str2, *str1) && *str1 != '\0')
+      str1++;
+    if (s21_strchr(str2, *str1) && *str1 != '\0')
+        return (char *)str1;
+    else
+        return s21_NULL;
 }
 
 // Searches for the last occurrence of the character 'c'
 char *s21_strrchr(const char *str, int c) {
-  int start = 0;
-  char *error = "";
-  char *newstr = s21_NULL;
-  if (c == '\0')
-    return error;
-  else {
-    for (int i = s21_strlen(str); str[i] != c && i > 0; i--) {
-      start = i;
+    char *new = s21_NULL;
+    while (*str != '\0') {
+        if (*new == c) {
+            new = (char *)str;
+        }
+        str ++;
+        if (*new == c) {
+            new = (char *)str;
+        }
     }
-    if (start != 0) {
-      for (s21_size_t i = start - 1; str[i] != '\0'; i++) {
-        newstr = (char *)&str[i];
-        return newstr;
-      }
-    }
-  }
-  return s21_NULL;
+    return new;
 }
 
 // Finds the first occurrence of the entire string needle
 // which appears in the string haystack
 char *s21_strstr(const char *haystack, const char *needle) {
   s21_size_t i = 0;
-  s21_size_t len = s21_strlen(needle);
+  size_t len = s21_strlen(needle);
+    char *new = s21_NULL;
   if (*needle == '\0') {
-    return (char *)haystack;
+    new = (char *)haystack;
   } else {
     while (*haystack != '\0') {
       while (*needle == *haystack) {
@@ -243,12 +239,12 @@ char *s21_strstr(const char *haystack, const char *needle) {
         i++;
       }
       if (i == len) {
-        return (char *)haystack - i + 1;
+        new = (char *)haystack - i + 1;
       }
       haystack++;
     }
   }
-  return s21_NULL;
+  return new;
 }
 
 // Searches for the first occurrence of the character 'c'
@@ -265,6 +261,9 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
   }
   return s21_NULL;
 }
+
+
+
 /*
   Copy functions
   Jesicahi
