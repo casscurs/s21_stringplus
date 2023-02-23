@@ -1042,6 +1042,10 @@ START_TEST(e_flags) {
   format = "% -+040e";
   ck_assert_int_eq(s21_sprintf(str1, format, var), sprintf(str2, format, var));
   ck_assert_str_eq(str1, str2);
+
+  format = "%#+-40E";
+  ck_assert_int_eq(s21_sprintf(str1, format, var), sprintf(str2, format, var));
+  ck_assert_str_eq(str1, str2);
 }
 END_TEST
 
@@ -1106,6 +1110,11 @@ START_TEST(e_precision) {
 
   ck_assert_int_eq(s21_sprintf(str1, format, 0, var),
                    sprintf(str2, format, 0, var));
+  ck_assert_str_eq(str1, str2);
+
+  format = "%#.*e";
+  ck_assert_int_eq(s21_sprintf(str1, format, 18, var),
+                   sprintf(str2, format, 18, var));
   ck_assert_str_eq(str1, str2);
 
   var = 0;
@@ -1382,6 +1391,11 @@ START_TEST(f_precision) {
   format = "%+.*f";
   ck_assert_int_eq(s21_sprintf(str1, format, 12, var),
                    sprintf(str2, format, 12, var));
+  ck_assert_str_eq(str1, str2);
+
+  format = "%#+.*f";
+  ck_assert_int_eq(s21_sprintf(str1, format, 13, var),
+                   sprintf(str2, format, 13, var));
   ck_assert_str_eq(str1, str2);
 
   format = "% .*f";

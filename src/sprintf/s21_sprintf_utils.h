@@ -12,7 +12,7 @@ int s21_atoi(const char **str);
 char s21_digit_to_char(int digit, int text_case);
 char *s21_unsigned_to_str(unsigned long int num, unsigned int notation,
                           int text_case);
-char *s21_mantissa_to_str(long double num, int *next_digit, int precision);
+char *s21_mantissa_to_str(long double num, int *next_digit, opt options);
 char *s21_float_to_str(long double num);
 void s21_WchInStr(char *str, wchar_t *wstr, int len);
 void s21_invert_str(char *origin, char *inverted);
@@ -32,8 +32,8 @@ void s21_apply_num_precision(char **buf, int precision);
 void s21_add_notation(char **buf, opt options);
 void s21_add_sign(char **buf, char sign);
 void s21_apply_width(char **buf, opt options, var *variables);
-void s21_delete_trailing_zeros(char **num_string, specifi format_spec);
-void s21_math_rounding(char **num_string, int next_digit);
+void s21_delete_trailing_zeros(char **num_string, opt options);
+void s21_math_rounding(char **num_string, int next_digit, char *exp_sign, unsigned *u_exp);
 
 // others
 size_t s21_wstrlen(wchar_t *wstr);

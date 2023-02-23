@@ -129,14 +129,13 @@ int s21_e_specifiers(char **str, opt options, long double double_var,
     mantissa = double_var;
     exp_sign = (mantissa < 1. && mantissa >= LDBL_TRUE_MIN) ? '-' : '+';
     u_exponent = s21_get_exponent(&mantissa);
+    mant_buf = s21_mantissa_to_str(mantissa, &next_digit, options);
+    s21_math_rounding(&mant_buf, next_digit, &exp_sign, &u_exponent);
+    s21_delete_trailing_zeros(&mant_buf, options);
     exp_buf = s21_unsigned_to_str(u_exponent, 10, 0);
     s21_apply_num_precision(&exp_buf, 2);
     s21_add_sign(&exp_buf, exp_sign);
     s21_add_sign(&exp_buf, e_char);
-    mant_buf = s21_mantissa_to_str(
-        mantissa, &next_digit, options.precision >= 0 ? options.precision : 6);
-    s21_math_rounding(&mant_buf, next_digit);
-    s21_delete_trailing_zeros(&mant_buf, options.format_spec);
     buf = s21_sum_and_free_strings(mant_buf, exp_buf);
     if (options.flags.ZERO && !options.flags.MINUS && options.min_width > 0) {
       s21_apply_num_precision(&buf, options.min_width - (sign != '\0'));
@@ -169,11 +168,10 @@ int s21_f_specifier(char **str, opt options, long double double_var,
     int next_digit = 0;
     s21_split_float(double_var, &ones, &tens);
     tens_buf = s21_float_to_str(tens);
-    ones_buf = s21_mantissa_to_str(
-        ones, &next_digit, options.precision >= 0 ? options.precision : 6);
+    ones_buf = s21_mantissa_to_str(ones, &next_digit, options);
     buf = s21_sum_and_free_strings(tens_buf, ones_buf);
-    s21_math_rounding(&buf, next_digit);
-    s21_delete_trailing_zeros(&buf, options.format_spec);
+    s21_math_rounding(&buf, next_digit, s21_NULL, s21_NULL);
+    s21_delete_trailing_zeros(&buf, options);
     if (options.flags.ZERO && !options.flags.MINUS && options.min_width > 0) {
       s21_apply_num_precision(&buf, options.min_width - (sign != '\0'));
     }

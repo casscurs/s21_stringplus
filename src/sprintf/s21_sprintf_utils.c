@@ -50,9 +50,10 @@ char *s21_unsigned_to_str(unsigned long int num, unsigned int notation,
   return ascii_str;
 }
 
-char *s21_mantissa_to_str(long double num, int *next_digit, int precision) {
+char *s21_mantissa_to_str(long double num, int *next_digit, opt options) {
   char *ascii_str = s21_NULL;
-  int length = 0, digit = 0;
+  int length = 0, digit = 0, precision = -1;
+  precision = (options.precision >= 0 )? options.precision : 6;
 
   num *= (num < 0) ? -1 : 1;
   digit = floorl(num);
@@ -61,7 +62,7 @@ char *s21_mantissa_to_str(long double num, int *next_digit, int precision) {
   ascii_str = (char *)malloc(sizeof(char) * (precision + 5));
   if (ascii_str) {
     ascii_str[length++] = s21_digit_to_char(digit, 0);
-    if (precision > 0) {
+    if (precision > 0 || options.flags.SHARP) {
       ascii_str[length++] = '.';
     }
     for (int i = 0; i < precision; i++) {
@@ -312,11 +313,16 @@ char *s21_float_to_str(long double num) {
   char *ascii_str = s21_NULL, *reverse_str = s21_NULL;
   int buf_len = 0;
   int length = 0;
+  long double tmp_num = 0;
   num *= (num < 0) ? -1 : 1;
-  buf_len = (int)roundl(log10l(num));
+  tmp_num = num;
+  while (tmp_num > 1) {
+    buf_len += 1;
+    tmp_num /= 10;
+  }
   buf_len = (buf_len > 0) ? buf_len : 2;
-  ascii_str = (char *)malloc(sizeof(char) * (buf_len + 2));
-  reverse_str = (char *)malloc(sizeof(char) * (buf_len + 2));
+  ascii_str = (char *)calloc((buf_len + 5), sizeof(char));
+  reverse_str = (char *)calloc((buf_len + 5), sizeof(char));
   if (ascii_str && reverse_str) {
     while (num >= 1L) {
       int digit = 0;
@@ -334,7 +340,7 @@ char *s21_float_to_str(long double num) {
   return ascii_str;
 }
 
-void s21_math_rounding(char **num_string, int next_digit) {
+void s21_math_rounding(char **num_string, int next_digit, char *exp_sign, unsigned *u_exp) {
   if (*num_string && next_digit >= 5) {
     int not_rounded = 1, position = 0;
     position = s21_strlen(*num_string) - 1;
@@ -351,23 +357,46 @@ void s21_math_rounding(char **num_string, int next_digit) {
       }
     }
     if (position == -1) {
-      char *tmp_ptr = s21_NULL;
-      tmp_ptr = (char *)calloc(s21_strlen(*num_string) + 3, sizeof(char));
-      if (tmp_ptr) {
-        tmp_ptr[0] = '1';
-        s21_strcat(tmp_ptr, *num_string);
-        *num_string = tmp_ptr;
+      char *tmp_ptr = s21_NULL, *tmp_array = s21_NULL;
+      int num_string_len = 0;
+      num_string_len = s21_strlen(*num_string);
+      tmp_array = (char *)calloc(num_string_len + 1, sizeof(char));
+      if (tmp_array) {
+        s21_strcpy(tmp_array, *num_string);
+        tmp_ptr = (char *)realloc(*num_string, sizeof(char)*(num_string_len + 5));
+        if (tmp_ptr) {
+          tmp_ptr[0] = '1';
+          tmp_ptr[1] = '\0';
+          s21_strcat(tmp_ptr, tmp_array);
+          if (u_exp) {
+            if (*exp_sign == '-') {
+              *u_exp = *u_exp - 1;
+              if (*u_exp == 0) {
+                *exp_sign = '+';
+              }
+            } else {
+              *u_exp = *u_exp + 1;
+            }
+            tmp_ptr[2] = tmp_ptr[1];
+            tmp_ptr[1] = '.';
+            tmp_ptr[s21_strlen(tmp_ptr) - 1] = '\0';
+          }
+          *num_string = tmp_ptr;
+        }
+        free(tmp_array);
       }
     }
   }
 }
 
-void s21_delete_trailing_zeros(char **num_string, specifi format_spec) {
-  if (*num_string && (format_spec == GUP || format_spec == GLOW)) {
+void s21_delete_trailing_zeros(char **num_string, opt options) {
+  if (*num_string && options.flags.SHARP == 0 &&
+      (options.format_spec == GUP || options.format_spec == GLOW)) {
     int position = 0;
     position = s21_strlen(*num_string) - 1;
-    while ((position > 0) &&
-           ((*num_string)[position] == '0' || (*num_string)[position] == '.')) {
+    while ((position > 0) && 
+           ((*num_string)[position] == '0' ||
+            ((*num_string)[position] == '.'))) {
       (*num_string)[position] = '\0';
       position -= 1;
     }
