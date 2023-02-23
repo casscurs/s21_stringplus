@@ -159,8 +159,10 @@ int s21_strcmp(const char *str1, const char *str2) {
   int res = 0;
   for (; *str1 && *str1 == *str2; str1++, str2++) {
   }
-  if (!*str1 && !*str2) res = 0;
-  else res = *str1 - *str2;
+  if (!*str1 && !*str2)
+    res = 0;
+  else
+    res = *str1 - *str2;
   return res;
 }
 
@@ -170,8 +172,10 @@ int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
   for (; *str1 && *str1 == *str2 && i < (int)n - 1; str1++, str2++) {
     i++;
   }
-  if ((!*str1 && !*str2) || (n == 0)) res =  0;
-  else res = *str1 - *str2;
+  if ((!*str1 && !*str2) || (n == 0))
+    res = 0;
+  else
+    res = *str1 - *str2;
   return res;
 }
 
@@ -202,12 +206,11 @@ char *s21_strchr(const char *str, int c) {
 // Finds the first character in the string str1 that
 // matches any character specified in str2
 char *s21_strpbrk(const char *str1, const char *str2) {
-    char *new = s21_NULL; 
-    while (!s21_strchr(str2, *str1) && *str1 != '\0')
-      str1++;
-    if (s21_strchr(str2, *str1) && *str1 != '\0') new =  (char *)str1;
-  
-    return new;
+  char *new = s21_NULL;
+  while (!s21_strchr(str2, *str1) && *str1 != '\0') str1++;
+  if (s21_strchr(str2, *str1) && *str1 != '\0') new = (char *)str1;
+
+  return new;
 }
 
 // Searches for the last occurrence of the character 'c'
@@ -258,8 +261,6 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
   }
   return s21_NULL;
 }
-
-
 
 /*
   Copy functions

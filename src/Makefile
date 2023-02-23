@@ -26,6 +26,7 @@ clean:
 	-rm -rf *.o *.html *.gcda *.gcno *.css *.a *.gcov *.info *.out *.cfg *.txt gcov*
 
 style_check:
+	clang-format -style=Google -n *.c *.h
 	clang-format -style=Google -n */*.c */*.h
 
 cpk:
