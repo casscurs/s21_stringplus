@@ -12,6 +12,8 @@ s21_string.a:
 
 test:
 	$(CC) $(CFLAGS) $(LDFLAGS) *.c sprintf/*.c tests/*.c -lm `pkg-config --cflags --libs check`
+	./a.out
+	rm a.out
 
 gcov_report:
 	$(CC) $(CFLAGS) $(LDFLAGS) $(GCOVFLAGS) *.c sprintf/*.c tests/*.c -o gcov_main -lm `pkg-config --cflags --libs check`
