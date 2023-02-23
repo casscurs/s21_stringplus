@@ -342,6 +342,87 @@ START_TEST(s21_strncpy_tests) {
 }
 END_TEST
 
+START_TEST(strncpy_simple_test) {
+  char copy[] = "simple copy";
+  char got[30];
+  char must[30];
+  s21_size_t size = 12;
+
+  s21_strncpy(got, copy, size);
+  strncpy(must, copy, size);
+
+  ck_assert_str_eq(got, must);
+}
+END_TEST
+
+START_TEST(strncpy_rewrite_copy) {
+  char copy[] = "simple copy";
+  char got[30] = "Rewrite me pls";
+  char must[30] = "Please me too";
+  s21_size_t size = 12;
+
+  s21_strncpy(got, copy, size);
+  strncpy(must, copy, size);
+
+  ck_assert_str_eq(got, must);
+}
+END_TEST
+
+START_TEST(strncpy_copy_empty) {
+  char copy[] = "";
+  char got[30] = "Rewrite me pls";
+  char must[30] = "Please me too";
+  s21_size_t size = 1;
+
+  s21_strncpy(got, copy, size);
+  strncpy(must, copy, size);
+
+  ck_assert_str_eq(got, must);
+}
+END_TEST
+
+START_TEST(strncpy_all_empty) {
+  char copy[] = "";
+  char got[] = "";
+  char must[] = "";
+  s21_size_t size = 0;
+
+  s21_strncpy(got, copy, size);
+  strncpy(must, copy, size);
+
+  ck_assert_str_eq(got, must);
+}
+END_TEST
+
+START_TEST(strncpy_long_full_test) {
+  char copy[] =
+      "1234567890qwertyuiop[]asdfghjkl;zxcvbnm,./"
+      "\n\tQWERTYUIOPASDFGHJKLZXCVBNM";
+  char got[100] = "Rewrite me pls";
+  char must[100] = "Please me too";
+  s21_size_t size = 71;
+
+  s21_strncpy(got, copy, size);
+  strncpy(must, copy, size);
+
+  ck_assert_str_eq(got, must);
+}
+END_TEST
+
+START_TEST(strncpy_loop_check) {
+  char copy[] =
+      "1234567890qwertyuiop[]asdfghjkl;zxcv\0bnm,./"
+      "\n\tQWERTYUIOPASDFGHJ\0KLZXCVBNM";
+  char got[100] = "Rewrite me pls";
+  char must[100] = "Rewrite me pls";
+  for (s21_size_t size = 0; size < 71; size++) {
+    s21_strncpy(got, copy, size);
+    strncpy(must, copy, size);
+    ck_assert_str_eq(got, must);
+  }
+}
+END_TEST
+
 // tests for help functions Jesicahi
 START_TEST(s21_strtok_tests) {
   char str[30] = "test1/test2/test3/test4";
@@ -650,6 +731,12 @@ Suite *s21_string_suite(void) {
   tcase_add_loop_test(tc_tests_copy, s21_memset_tests, 0, 5);
   tcase_add_loop_test(tc_tests_copy, s21_strcpy_tests, 0, 5);
   tcase_add_loop_test(tc_tests_copy, s21_strncpy_tests, 0, 5);
+   tcase_add_test(tc_tests_copy, strncpy_simple_test);
+  tcase_add_test(tc_tests_copy, strncpy_rewrite_copy);
+  tcase_add_test(tc_tests_copy, strncpy_copy_empty);
+  tcase_add_test(tc_tests_copy, strncpy_all_empty);
+  tcase_add_test(tc_tests_copy, strncpy_long_full_test);
+  tcase_add_test(tc_tests_copy, strncpy_loop_check);
   suite_add_tcase(s, tc_tests_copy);
 
   // tests of help functions Jesicahi

@@ -104,33 +104,35 @@ int find(int in, char *trim) {
     if (*trim == in) count++;
     trim++;
   }
+  int flag = 0;
   if (count >= 1) {
-    return 1;
+    flag = 1;
   } else {
-    return 0;
+    flag = 0;
   }
+  return flag;
 }
 
 void *s21_trim(const char *src, const char *trim_chars) {
   s21_size_t i = 0;
   if (src == s21_NULL) return s21_NULL;
-  if (trim_chars == s21_NULL) return (void *)src;
   // char *res = (char *)malloc(s21_strlen(src) + 1);
   char *res = (char *)calloc(s21_strlen(src) + 1, sizeof(char));
-  s21_strcpy(res, src);
+  strcpy(res, src);
+  if (trim_chars == s21_NULL) return (void *)res;
   // char *trim = (char *)malloc(s21_strlen(trim_chars) + 1);
   char *trim = (char *)calloc(s21_strlen(trim_chars) + 1, sizeof(char));
 
   if (trim_chars != s21_NULL && s21_strlen(trim_chars) != 0)
-    s21_strcpy(trim, trim_chars);
+    strcpy(trim, trim_chars);
   else
-    s21_strcpy(trim, "\t\n\v\r\f ");
+    strcpy(trim, "\t\n\v\r\f ");
 
   int index = 0, j, k = 0;
   while (find(res[index], trim)) {
     index++;
   }
-  int len = strlen(res);
+  int len = s21_strlen(res);
   if (index > 0) {
     for (j = 0, k = index; j <= len - index; j++, k++) {
       res[j] = res[k];
@@ -326,14 +328,14 @@ char *s21_strcpy(char *restrict dest, const char *restrict src) {
 
 char *s21_strncpy(char *restrict dest, const char *restrict src, s21_size_t n) {
   char *start = dest;
-
-  while (*src != '\0' && n) {
-    *dest = *src;
-    dest++;
-    src++;
-    n--;
+  s21_size_t src_len = s21_strlen(src);
+  for (s21_size_t i = 0; i < n; i++) {
+    if (i >= src_len) {
+      dest[i] = '\0';
+    } else {
+      dest[i] = src[i];
+    }
   }
-
   return start;
 }
 
