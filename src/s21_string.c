@@ -212,40 +212,36 @@ char *s21_strpbrk(const char *str1, const char *str2) {
 
 // Searches for the last occurrence of the character 'c'
 char *s21_strrchr(const char *str, int c) {
-    char *new = s21_NULL;
-    while (*str != '\0') {
-        if (*new == c) {
-            new = (char *)str;
-        }
-        str ++;
-        if (*new == c) {
-            new = (char *)str;
-        }
+  char *res = s21_NULL;
+  s21_size_t len = s21_strlen(str);
+
+  for (int i = len; i >= 0; i--) {
+    if (str[i] == c) {
+      res = ((char *)str) + i;
+      break;
     }
-    return new;
+  }
+
+  return res;
 }
 
 // Finds the first occurrence of the entire string needle
 // which appears in the string haystack
 char *s21_strstr(const char *haystack, const char *needle) {
-  s21_size_t i = 0;
-  size_t len = s21_strlen(needle);
-    char *new = s21_NULL;
-  if (*needle == '\0') {
-    new = (char *)haystack;
-  } else {
+  char *strForReturn = s21_NULL;
+  if (!s21_strcmp(needle, ""))
+    strForReturn = (char *)haystack;
+  else {
+    s21_size_t length = s21_strlen(needle);
     while (*haystack != '\0') {
-      while (*needle == *haystack) {
-        needle++;
-        i++;
-      }
-      if (i == len) {
-        new = (char *)haystack - i + 1;
+      if (s21_memcmp(haystack, needle, length) == 0) {
+        strForReturn = (char *)haystack;
+        break;
       }
       haystack++;
     }
   }
-  return new;
+  return strForReturn;
 }
 
 // Searches for the first occurrence of the character 'c'
