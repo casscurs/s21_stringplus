@@ -191,22 +191,23 @@ int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
 */
 // Searches for the first occurrence of the character 'c'
 char *s21_strchr(const char *str, int c) {
+  char *new = s21_NULL;
   while (*str != c && *str != '\0') str++;
   if (*str == c) {
-    return (char *)str;
+    new = (char *)str;
   }
-  return s21_NULL;
+  return new;
 }
 
 // Finds the first character in the string str1 that
 // matches any character specified in str2
 char *s21_strpbrk(const char *str1, const char *str2) {
+    char *new = s21_NULL; 
     while (!s21_strchr(str2, *str1) && *str1 != '\0')
       str1++;
-    if (s21_strchr(str2, *str1) && *str1 != '\0')
-        return (char *)str1;
-    else
-        return s21_NULL;
+    if (s21_strchr(str2, *str1) && *str1 != '\0') new =  (char *)str1;
+  
+    return new;
 }
 
 // Searches for the last occurrence of the character 'c'
