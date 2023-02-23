@@ -731,7 +731,7 @@ Suite *s21_string_suite(void) {
   tcase_add_loop_test(tc_tests_copy, s21_memset_tests, 0, 5);
   tcase_add_loop_test(tc_tests_copy, s21_strcpy_tests, 0, 5);
   tcase_add_loop_test(tc_tests_copy, s21_strncpy_tests, 0, 5);
-   tcase_add_test(tc_tests_copy, strncpy_simple_test);
+  tcase_add_test(tc_tests_copy, strncpy_simple_test);
   tcase_add_test(tc_tests_copy, strncpy_rewrite_copy);
   tcase_add_test(tc_tests_copy, strncpy_copy_empty);
   tcase_add_test(tc_tests_copy, strncpy_all_empty);
